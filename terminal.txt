@@ -1,0 +1,18 @@
+# Train model
+
+python train.py --img 640 --batch 16 --epochs 1000 --data data/skin_disease.yaml --weights yolov5l.pt --cache
+
+# Inference
+
+python detect.py --weights yolov5s.pt --source 0                               # webcam
+                                               img.jpg                         # image
+                                               vid.mp4                         # video
+                                               screen                          # screenshot
+                                               path/                           # directory
+                                               list.txt                        # list of images
+                                               list.streams                    # list of streams
+                                               'path/*.jpg'                    # glob
+                                               'https://youtu.be/Zgi9g1ksQHc'  # YouTube
+                                               'rtsp://example.com/media.mp4'  # RTSP, RTMP, HTTP stream
+
+python detect.py --weights yolov5l.pt --source data/images
