@@ -2,37 +2,33 @@ import os
 import sys
 import cv2                 
 import logging
+import numpy as np
 from pathlib import Path
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from detect import detect_object
-
-FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0]  # YOLOv5 root directory
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))  # add ROOT to PATH
-ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 app = Flask(__name__)
 app.debug = True
 app.logger.setLevel(logging.DEBUG)
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/detect_object", methods=['POST'])
 def detect_method():
-    weights='./public/files/weight_init/best.pt' # model path
-    device = '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
-    data = './data/coco.yaml'        
-    file = request.files['file']
-    if file and allowed_file(file.filename):
-        filename = file.filename
+    try:
+        weights='./public/files/weight_init/best.pt' # model path
+        device = '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
+        data = './data/coco.yaml'        
+        file = request.files.get('file')
+        npimg = np.fromfile(file, np.uint8)
+        image = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+        filename = 'photo.jpg'
+        cv2.imwrite(filename, image)
         classified = detect_object(weights, device, data, filename)
-    result_dict = {'output': classified}
-    return result_dict
-  
+        return jsonify(status_code=200, content=classified)
+    
+    except Exception as e:
+        return jsonify(status_code=400, content={'success':"false",'error': str(e)})
+
 def run_server_api():
     app.run(host='0.0.0.0', port=8080)
 

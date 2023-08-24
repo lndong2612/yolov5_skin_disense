@@ -23,13 +23,17 @@ files = {
 response = requests.post(url, headers=headers, files=files)
 classified = response.json()
 print(response.json())
+
+# Load image
 im = cv2.imread(image_path)
 fontScale = 0.5
 image_h, image_w, _ = im.shape
 bbox_thick = int(0.6 * (image_h + image_w) / 600)
 bbox_color = (0, 255, 0)
 thickness = 2
-for info in classified['output']:
+
+# Draw bbox on input image
+for info in classified['content']:
     xmin = info['xmin']
     ymin = info['ymin']
     xmax = info['xmax']
@@ -53,5 +57,5 @@ for info in classified['output']:
                 fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
         cv2.rectangle(im, c1, c2, bbox_color, thickness)
         
-cv2.imshow('show', im)
+cv2.imshow('Im show', im)
 cv2.waitKey(0)

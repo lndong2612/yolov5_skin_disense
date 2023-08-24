@@ -79,11 +79,12 @@ In this repository, i will using yolov5 to detect the skin disense with the inpu
 I wrote an example code that sends an input image, receives the output, and uses that result to draw on the input image.
 
 Run in different console while running main.py
+
 ```python
     (venv)$ python test/test_client.py
 ```
 
-{'output': [{'label': 'Zona', 'score': '0.91', 'xmax': 479, 'xmin': 192, 'ymax': 218, 'ymin': 98}, {'label': 'Zona', 'score': '0.92', 'xmax': 260, 'xmin': 71, 'ymax': 120, 'ymin': 0}, {'label': 'Zona', 'score': '0.93', 'xmax': 290, 'xmin': 0, 'ymax': 416, 'ymin': 194}, {'label': 'Zona', 'score': '0.95', 'xmax': 640, 'xmin': 327, 'ymax': 416, 'ymin': 169}]}
+{'content': [{'label': 'Zona', 'score': '0.92', 'xmax': 478, 'xmin': 192, 'ymax': 218, 'ymin': 97}, {'label': 'Zona', 'score': '0.92', 'xmax': 258, 'xmin': 72, 'ymax': 120, 'ymin': 0}, {'label': 'Zona', 'score': '0.93', 'xmax': 289, 'xmin': 0, 'ymax': 416, 'ymin': 195}, {'label': 'Zona', 'score': '0.95', 'xmax': 640, 'xmin': 327, 'ymax': 416, 'ymin': 168}], 'status_code': 200}
 
 <div align="center">
   <p>
