@@ -87,6 +87,6 @@ Run in different console while running main.py
 
 <div align="center">
   <p>
-    <img width="80%" src="./test/images/results/zona.jpg"></a>
+    <img width="80%" src="./background/zona.jpg"></a>
   </p>
 
