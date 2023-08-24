@@ -35,6 +35,7 @@ def xywh2xyxy(x):
     y[..., 3] = x[..., 1] + x[..., 3] / 2  # bottom right y
     return y
 
+
 def clip_boxes(boxes, shape):
     # Clip boxes (xyxy) to image shape (height, width)
     if isinstance(boxes, torch.Tensor):  # faster individually
@@ -45,6 +46,7 @@ def clip_boxes(boxes, shape):
     else:  # np.array (faster grouped)
         boxes[..., [0, 2]] = boxes[..., [0, 2]].clip(0, shape[1])  # x1, x2
         boxes[..., [1, 3]] = boxes[..., [1, 3]].clip(0, shape[0])  # y1, y2
+
 
 # Load model
 def load_model(weights, device, data, source):
@@ -59,11 +61,12 @@ def load_model(weights, device, data, source):
     bs = 1  # batch_size
     return model, pt, bs, imgsz, dataset, device, names
 
+
 def detect_object(weights, device, data, source):
     classified = [] 
     imgsz = (640, 640)  # inference size (height, width)
-    conf_thres = 0.25  # confidence threshold
-    iou_thres = 0.45  # NMS IOU threshold
+    conf_thres = 0.35  # confidence threshold
+    iou_thres = 0.55  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
     classes = None # filter by class: --class 0, or --class 0 2 3
     agnostic_nms = False # class-agnostic NMS
@@ -138,4 +141,3 @@ def detect_object(weights, device, data, source):
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
 
     return classified
-

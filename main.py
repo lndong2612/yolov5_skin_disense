@@ -21,15 +21,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/log", methods=['GET'])
-def print_log():         
-    data = 'Hello'
-    result_dict = {'output': data}
-    return result_dict
-
-@app.route("/detect", methods=['POST'])
+@app.route("/detect_object", methods=['POST'])
 def detect_method():
-    weights='./runs/train/exp2/weights/best.pt' # model path
+    weights='./public/files/weight_init/best.pt' # model path
     device = '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
     data = './data/coco.yaml'        
     file = request.files['file']
@@ -38,7 +32,6 @@ def detect_method():
         classified = detect_object(weights, device, data, filename)
     result_dict = {'output': classified}
     return result_dict
-  
   
 def run_server_api():
     app.run(host='0.0.0.0', port=8080)

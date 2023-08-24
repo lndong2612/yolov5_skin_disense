@@ -47,6 +47,46 @@ To request an Enterprise License please complete the form at [Ultralytics Licens
     <img src="https://github.com/ultralytics/assets/blob/main/social/logo-social-discord.png" width="2%" alt="" /></a>
 </div>
 
+In this repository, i will using yolov5 to detect the skin disense with the input is an image and the output is a dict contain xmax, ymax, xmin, ymin, score and label of disense.
+
 </div>
 <br>
+
+## <div align="left">Install</div>
+
+1. Download this weight name [best.pt](https://drive.google.com/file/d/11CMf6nW1meckuQMz_mJbEzjleGuMJOWC/view?usp=drive_link) and save with the following path: public/files/weight_init/best.pt
+
+2. Create and activate a virtual environment:
+
+    ```sh
+    $ python3 -m venv venv && source venv/bin/activate
+    ```
+  
+3. Install the requirements:
+
+    ```sh
+    (venv)$ pip install -r requirements.txt
+    ```
+
+4. Run
+
+    ```sh
+    (venv)$ python main.py
+    ```
+
+## <div align="left">Example</div>
+
+I wrote an example code that sends an input image, receives the output, and uses that result to draw on the input image.
+
+Run in different console while running main.py
+```python
+    (venv)$ python test/test_client.py
+```
+
+{'output': [{'label': 'Zona', 'score': '0.91', 'xmax': 479, 'xmin': 192, 'ymax': 218, 'ymin': 98}, {'label': 'Zona', 'score': '0.92', 'xmax': 260, 'xmin': 71, 'ymax': 120, 'ymin': 0}, {'label': 'Zona', 'score': '0.93', 'xmax': 290, 'xmin': 0, 'ymax': 416, 'ymin': 194}, {'label': 'Zona', 'score': '0.95', 'xmax': 640, 'xmin': 327, 'ymax': 416, 'ymin': 169}]}
+
+<div align="center">
+  <p>
+    <img width="80%" src="./test/images/results/zona.jpg"></a>
+  </p>
 
