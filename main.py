@@ -6,8 +6,7 @@ from detect import detect_object
 from config import settings
 
 app = Flask(__name__)
-app.debug = True
-app.logger.setLevel(logging.DEBUG)
+
 
 
 @app.route("/detect_object", methods=['POST'])

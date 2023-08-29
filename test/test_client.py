@@ -1,3 +1,8 @@
+import os
+import sys
+WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(WORKING_DIR, "../"))
+
 import cv2
 import requests
 from utils.plots import draw_bbox

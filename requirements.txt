@@ -47,4 +47,5 @@ setuptools>=65.5.1 # Snyk vulnerability fix
 # mss  # screenshots
 # albumentations>=1.0.3
 # pycocotools>=2.0.6  # COCO mAP
-flask
+flask==2.3.3
+pydantic==1.10.7
