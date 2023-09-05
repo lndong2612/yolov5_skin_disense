@@ -10,11 +10,11 @@ services:
       restart_policy:
         condition: any
     ports:
-      - target: 3003
+      - target: 8080
         published: 8084
         mode: host
     environment:
-      PORT: 3003
+      PORT: 8080
       NODE_ENV: "production"
       SERVICE_3003_NAME: "tclinicaiapi"
       SERVICE_NAME: "tclinicaiapi"
