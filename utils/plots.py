@@ -453,7 +453,7 @@ def draw_bbox(im, classified):
     thickness = 2
 
     # Draw bbox on input image
-    for info in classified['content']:
+    for info in classified:
         xmin = info['xmin']
         ymin = info['ymin']
         xmax = info['xmax']
