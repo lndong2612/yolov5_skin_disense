@@ -18,18 +18,18 @@ pipeline {
                             [sshTransfer(
                                 cleanRemote: false,
                                 excludes: '',
-                                execCommand: "docker build -t registry.thinklabs.com.vn:5000/tclinicAiApi ./thinklabsdev/tclinicAiApiCI/ \
-                                    && docker image push registry.thinklabs.com.vn:5000/tclinicAiApi \
-                                    && docker service rm tclinicAi_api || true \
-                                    && docker stack deploy -c ./thinklabsdev/tclinicAiApiCI/docker-compose.yml tclinicAi \
-                                    && rm -rf ./thinklabsdev/tclinicAiApiCIB \
-                                    && mv ./thinklabsdev/tclinicAiApiCI/ ./thinklabsdev/tclinicAiApiCIB",
+                                execCommand: "docker build -t registry.thinklabs.com.vn:5000/tclinicaiapi ./thinklabsdev/tclinicaiapiCI/ \
+                                    && docker image push registry.thinklabs.com.vn:5000/tclinicaiapi \
+                                    && docker service rm tclinicai_api || true \
+                                    && docker stack deploy -c ./thinklabsdev/tclinicaiapiCI/docker-compose.yml tclinicai \
+                                    && rm -rf ./thinklabsdev/tclinicaiapiCIB \
+                                    && mv ./thinklabsdev/tclinicaiapiCI/ ./thinklabsdev/tclinicaiapiCIB",
                                 execTimeout: 1800000,
                                 flatten: false,
                                 makeEmptyDirs: false,
                                 noDefaultExcludes: false,
                                 patternSeparator: '[, ]+',
-                                remoteDirectory: './thinklabsdev/tclinicAiApiCI',
+                                remoteDirectory: './thinklabsdev/tclinicaiapiCI',
                                 remoteDirectorySDF: false,
                                 removePrefix: '',
                                 sourceFiles: '*, classify/, data/, models/, segment/, utils/'
