@@ -11,7 +11,7 @@ services:
         condition: any
     ports:
       - target: 8080
-        published: 3369
+        published: 4059
         mode: host
     environment:
       PORT: 8080
