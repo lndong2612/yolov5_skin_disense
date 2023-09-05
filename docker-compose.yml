@@ -11,12 +11,12 @@ services:
         condition: any
     ports:
       - target: 8080
-        published: 8084
+        published: 3369
         mode: host
     environment:
       PORT: 8080
       NODE_ENV: "production"
-      SERVICE_3003_NAME: "tclinicaiapi"
+      SERVICE_8080_NAME: "tclinicaiapi"
       SERVICE_NAME: "tclinicaiapi"
       SERVICE_TAGS: "tclinicaiapi"
     volumes:
