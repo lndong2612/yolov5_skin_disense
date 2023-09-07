@@ -84,10 +84,11 @@ Run in different console while running main.py
     (venv)$ python test/test_client.py
 ```
 
-{'content': [{'label': 'Zona', 'score': '0.92', 'xmax': 478, 'xmin': 192, 'ymax': 218, 'ymin': 97}, {'label': 'Zona', 'score': '0.92', 'xmax': 258, 'xmin': 72, 'ymax': 120, 'ymin': 0}, {'label': 'Zona', 'score': '0.93', 'xmax': 289, 'xmin': 0, 'ymax': 416, 'ymin': 195}, {'label': 'Zona', 'score': '0.95', 'xmax': 640, 'xmin': 327, 'ymax': 416, 'ymin': 168}], 'status_code': 200}
+{'content': [{'label': 'Tinea_Versicolor', 'score': '0.90', 'xmax': 289, 'xmin': 185, 'ymax': 132, 'ymin': 48}, {'label': 'Tinea_Versicolor', 'score': '0.93', 'xmax': 521, 'xmin': 175, 'ymax': 384, 'ymin': 171}, {'label': 'Tinea_Versicolor', 'score': '0.93', 'xmax': 640, 'xmin': 582, 'ymax': 384, 'ymin': 90}, {'label': 'Tinea_Versicolor', 'score': '0.94', 'xmax': 184, 'xmin': 33, 'ymax': 384, 'ymin': 142}, {'detect_image': 'resources/images/2023/09/07/detect/15324907092023_detect.jpg', 'original_image': 'resources/images/2023/09/07/original/15324907092023_original.jpg'}], 'status_code': 200}
 
 <div align="center">
   <p>
     <img width="80%" src="./background/zona.jpg"></a>
+    <img width="80%" src="./background/15324907092023_detect.jpg"></a>
   </p>
 

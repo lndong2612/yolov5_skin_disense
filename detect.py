@@ -110,7 +110,7 @@ def detect_object(weights, device, data, source):
                     n = (det[:, 5] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
-                # Write results
+                # Get results
                 for *xyxy, conf, cls in reversed(det):
                     c = int(cls)  # integer class
                     label = f'{names[c]} {conf:.2f}'

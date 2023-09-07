@@ -445,7 +445,7 @@ def save_one_box(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=False,
         Image.fromarray(crop[..., ::-1]).save(f, quality=95, subsampling=0)  # save RGB
     return crop
 
-def draw_bbox(im, classified):
+def draw_bboxes(im, classified):
     fontScale = 0.5
     image_h, image_w, _ = im.shape
     bbox_thick = int(0.6 * (image_h + image_w) / 600)
@@ -459,22 +459,18 @@ def draw_bbox(im, classified):
         xmax = info['xmax']
         ymax = info['ymax']
         c1, c2 = (xmin, ymin), (xmax, ymax)
-        score = float(info['score'])
-        if score < 0.5:
-            pass
+        bbox_mess = '%s - %s' % (info['label'], info['score'])
+        t_size = cv2.getTextSize(bbox_mess, 0, fontScale, thickness=bbox_thick // 2)[0]
+        c3 = (c1[0] + t_size[0], c1[1] - t_size[1] - 7)
+        c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 7)
+        if ymin <= 10:
+            cv2.rectangle(im, c2, c4, bbox_color, -1) #filled
+            cv2.putText(im, bbox_mess, (c2[0] - t_size[0], c2[1] + t_size[1] + 5), cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)              
         else:
-            bbox_mess = '%s - %s' % (info['label'], info['score'])
-            t_size = cv2.getTextSize(bbox_mess, 0, fontScale, thickness=bbox_thick // 2)[0]
-            c3 = (c1[0] + t_size[0], c1[1] - t_size[1] - 7)
-            c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 7)
-            if ymin <= 10:
-                cv2.rectangle(im, c2, c4, bbox_color, -1) #filled
-                cv2.putText(im, bbox_mess, (c2[0] - t_size[0], c2[1] + t_size[1] + 5), cv2.FONT_HERSHEY_SIMPLEX,
-                    fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)                
-            else:
-                cv2.rectangle(im, c1, c3, bbox_color, -1) #filled
-                cv2.putText(im, bbox_mess, (c1[0] + 1, c1[1] - 3), cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
-                cv2.rectangle(im, c1, c2, bbox_color, thickness)
+            cv2.rectangle(im, c1, c3, bbox_color, -1) #filled
+            cv2.putText(im, bbox_mess, (c1[0] + 1, c1[1] - 3), cv2.FONT_HERSHEY_SIMPLEX,
+                    fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
+        cv2.rectangle(im, c1, c2, bbox_color, thickness)
     
     return im
