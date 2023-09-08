@@ -71,29 +71,52 @@
 # if __name__ == "__main__":     
 #     run_server_api()
 
-import os
-import time
-import json
-from config import settings
+# import cv2
+# import unicodedata
 
-# time_tuple = time.localtime()
-# time_string = time.strftime('%H%M%S%d%m%Y', time_tuple)
+# image_path = './test/images/zidane.jpg'
+# image = cv2.imread(image_path)
+# height, width, _ = image.shape
+# mess = '\u03A9'
+# print(mess)
+# fontScale = 0.75
+# bbox_thick = int(0.6 * (height + width) / 350)
+# bbox_color = (0, 255, 0)
+# thickness = 2
+# cv2.putText(image, mess, (5, 30), cv2.FONT_HERSHEY_SIMPLEX,
+#             fontScale, (0, 255, 0), bbox_thick // 2, lineType=cv2.LINE_AA)
+# cv2.imshow('IMG', image)
+# cv2.waitKey(0)
 
-# folder = "./nhap" # model path
-# input_img = 'original'
-# output_img = 'detect'
-# input_image_path = time.strftime(f"{folder}/{input_img}/%Y/%m/%d/")
-# output_image_path = time.strftime(f"{folder}/{output_img}/%Y/%m/%d")
-# if not os.path.exists(input_image_path):
-#     os.makedirs((input_image_path), exist_ok=True)
-# if not os.path.exists(output_image_path):
-#     os.makedirs((output_image_path), exist_ok=True)
+from PIL import ImageFont, ImageDraw, Image
+import numpy as np
+import cv2
 
-image_url = {
-    'original': 'sfsafadfdf',
-    'detect': 'rweykkhmtjh'
-}
-with open("sample.json", "r") as outfile:
-    # json.dump(image_url, outfile)
-    json_object = json.load(outfile)
-    print(json_object['original'])
+# Load the image
+image = cv2.imread('./test/images/zidane.jpg')
+
+# Convert the image from OpenCV to PIL
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+pil_image = Image.fromarray(image)
+
+# Set the font and size
+font = ImageFont.truetype('Arial.ttf', 32)
+
+# Set the position of the text
+position = (10, 50)
+
+# Set the color of the text (RGB)
+color = (255, 0, 0)
+
+# Draw the text on the image
+draw = ImageDraw.Draw(pil_image)
+draw.text(position, 'Xin chào', font=font, fill=color)
+
+# Convert the image back to OpenCV
+image = np.array(pil_image)
+image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+# Show the image
+cv2.imshow('Image', image)
+cv2.waitKey(0)
+

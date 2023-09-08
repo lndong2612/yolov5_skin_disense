@@ -10,7 +10,7 @@ import numpy as np
 from config import settings
 from detect import detect_object
 from utils.plots import draw_bboxes
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 
 # [logging config
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s',
@@ -26,6 +26,7 @@ detected = []
 @app.route("/detect_object", methods=['POST'])
 def detect_method():
     try:
+        """Detect object on input image"""
         time_tuple = time.localtime()
         time_string = time.strftime('%H%M%S%d%m%Y', time_tuple)
         weight_path = os.path.join(settings.MODEL, 'best.pt') # model path
@@ -43,8 +44,8 @@ def detect_method():
         input_image = '{}/{}_original.jpg'.format(original_folder, time_string) # original image path
         cv2.imwrite(input_image, image)
         original.append(input_image)
-        classified = detect_object(weight_path, device, settings.DATA_COCO, input_image) # objects detection on image
-        im_show = draw_bboxes(image, classified) # drawing bboxes on image
+        classified, det = detect_object(weight_path, device, settings.DATA_COCO, input_image) # objects detection on image
+        im_show = draw_bboxes(image, classified, det) # drawing bboxes on image
         output_image = '{}/{}_detected.jpg'.format(detected_folder, time_string)
         cv2.imwrite(output_image, im_show)
         detected.append(output_image)
@@ -63,14 +64,23 @@ def detect_method():
     except Exception as e:
         return jsonify(status_code = 400, content={'success':"false",'error': str(e)})
 
-@app.route('/download', methods=['GET', 'POST'])
-def download():
+@app.route('/show_detected', methods=['GET', 'POST'])
+def show_detected():
     try:
-        """Download a file."""
+        """Show detected image file."""
         with open(os.path.join(settings.IMAGE_FOLDER, 'image_url.json'), "r") as outfile:
             json_object = json.load(outfile)
             path = os.path.join(os.getcwd(),"{}".format(json_object['detected_image']))
         return send_file(path, as_attachment=True)
+
+    except Exception as e:
+        return jsonify(status_code = 400, content={'success':"false",'error': str(e)})
+
+@app.route('/get_image/<path:path>', methods=['GET'])
+def get_image(path):
+    try:
+        """Get image file from path."""
+        return send_from_directory(os.getcwd(), path)
 
     except Exception as e:
         return jsonify(status_code = 400, content={'success':"false",'error': str(e)})
