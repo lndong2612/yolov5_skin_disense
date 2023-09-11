@@ -88,35 +88,95 @@
 # cv2.imshow('IMG', image)
 # cv2.waitKey(0)
 
+import time
+import cv2
 from PIL import ImageFont, ImageDraw, Image
 import numpy as np
-import cv2
 
-# Load the image
-image = cv2.imread('./test/images/zidane.jpg')
+def draw_bboxes(im, classified, det):
+    image_h, image_w, _ = im.shape
+    print('{} {}'.format(image_h, image_w))
+    named_tuple = time.localtime() # get struct_time
+    time_string = time.strftime("%m/%d/%Y %H:%M:%S", named_tuple)
+    # if len(det) == 0:
+    #     bbox_mess = 'Không chuẩn đoán được bệnh !!'
+    #     fontScale = 0.75
+    #     bbox_thick = int(0.6 * (image_h + image_w) / 350)
+    #     # Write text on input image
+    #     cv2_im_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
+    #     pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL
+    #     draw = ImageDraw.Draw(pil_im)
+    #     font = ImageFont.truetype("arial.ttf", 20, encoding="unic")# Use a truetype font
+    #     draw.text((5, 10), bbox_mess, font=font, fill=(0, 255, 0))# Draw the text on the image
+    #     draw.text((image_w - 190,  image_h - 30), time_string, font=font, fill=(255, 255, 255))# Draw the text on the image
+    #     im = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
 
-# Convert the image from OpenCV to PIL
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-pil_image = Image.fromarray(image)
+    # else:
+    fontScale = 0.5
+    bbox_thick = int(0.6 * (image_h + image_w) / 600)
+    bbox_color = (0, 255, 0)
+    thickness = 2
+    # Draw bbox on input image
+    for info in classified['content']:
+        xmin = info['xmin']
+        ymin = info['ymin']
+        xmax = info['xmax']
+        ymax = info['ymax']
+        c1, c2 = (xmin, ymin), (xmax, ymax)
+        bbox_mess = '%s - %s' % (info['label'], info['score'])
+        t_size = cv2.getTextSize(bbox_mess, 0, fontScale, thickness=bbox_thick // 2)[0]
+        c3 = (c1[0] + t_size[0], c1[1] - t_size[1] - 7)
+        c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 7)
+        if ymin <= 10:
+            cv2.rectangle(im, c2, c4, bbox_color, -1) #filled
+            cv2.putText(im, bbox_mess, (c2[0] - t_size[0], c2[1] + t_size[1] + 5), cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)              
+        else:
+            cv2.rectangle(im, c1, c3, bbox_color, -1) #filled
+            cv2.putText(im, bbox_mess, (c1[0] + 1, c1[1] - 3), cv2.FONT_HERSHEY_SIMPLEX,
+                    fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
+        cv2.rectangle(im, c1, c2, bbox_color, thickness)
+        cv2.putText(im, time_string, (image_w - 190,  image_h - 30), cv2.FONT_HERSHEY_SIMPLEX,
+                    fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)        
+        
+    cv2_im_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
+    pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL
+    draw = ImageDraw.Draw(pil_im)
+    font_date = ImageFont.truetype("arial.ttf", 15, encoding="unic")# Use a truetype font
+    draw.text((image_w - 190,  image_h - 30), time_string, font=font_date, fill=(255, 255, 255))# Draw the text on the image
+    im = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
 
-# Set the font and size
-font = ImageFont.truetype('Arial.ttf', 32)
+    return im
 
-# Set the position of the text
-position = (10, 50)
+def write_date(image, bbox_mess, size, h, w, color, detect_none):
+    cv2_im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
+    pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL
+    font = ImageFont.truetype("arial.ttf", size, encoding="unic")# Use a truetype font
+    draw = ImageDraw.Draw(pil_im)
+    shape = [(3, 8), (370, 35)]   
+    if detect_none == True:
+        draw.rectangle(shape, fill = (255, 255, 255))
+    draw.text((w, h), bbox_mess, font=font, fill=color)# Draw the text on the image
 
-# Set the color of the text (RGB)
-color = (255, 0, 0)
+    image = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
 
-# Draw the text on the image
-draw = ImageDraw.Draw(pil_image)
-draw.text(position, 'Xin chào', font=font, fill=color)
+    return image
 
-# Convert the image back to OpenCV
-image = np.array(pil_image)
-image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+image = cv2.imread('./test/images/skin_disense/haclao2.jpg')
+bbox_mess = 'Mô hình không chuẩn đoán được bệnh !!'
+h = 10
+w = 5
+color = (0, 0, 0)
+size = 15
+named_tuple = time.localtime() # get struct_time
+time_string = time.strftime("%d/%m/%Y %H:%M:%S", named_tuple)
+image_h, image_w, _ = image.shape
+im = write_date(image, time_string, size, image_h - 25, image_w - 145, color, detect_none = False)
+# im = write_date(image, bbox_mess, size, h, w, color, detect_none = True)
 
-# Show the image
-cv2.imshow('Image', image)
+
+# classified = {'content': [{'label': 'Zona', 'score': '0.92', 'xmax': 599, 'xmin': 87, 'ymax': 362, 'ymin': 44}, {'detected_image': 'resources/images/2023/09/11/detect/08381911092023_detected.jpg', 'original_image': 'resources/images/2023/09/11/original/08381911092023_original.jpg'}], 'status_code': 200}
+# det = []
+# im_show = draw_bboxes(image, classified, det)
+cv2.imshow("IMG", im)
 cv2.waitKey(0)
-

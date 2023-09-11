@@ -2,7 +2,7 @@
 """
 Plotting utils
 """
-
+import time
 import contextlib
 import math
 import os
@@ -19,6 +19,7 @@ import torch
 from PIL import Image, ImageDraw
 from scipy.ndimage.filters import gaussian_filter1d
 from ultralytics.utils.plotting import Annotator
+from PIL import ImageFont, ImageDraw, Image
 
 from utils import TryExcept, threaded
 from utils.general import LOGGER, clip_boxes, increment_path, xywh2xyxy, xyxy2xywh
@@ -445,15 +446,32 @@ def save_one_box(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=False,
         Image.fromarray(crop[..., ::-1]).save(f, quality=95, subsampling=0)  # save RGB
     return crop
 
+def write_date(image, bbox_mess, size, h, w, color, detect_none):
+    cv2_im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
+    pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL
+    font = ImageFont.truetype("arial.ttf", size, encoding="unic")# Use a truetype font
+    draw = ImageDraw.Draw(pil_im)
+    shape = [(3, 8), (370, 35)]
+    if detect_none == True:
+        draw.rectangle(shape, fill = (255, 255, 255))
+    draw.text((w, h), bbox_mess, font=font, fill=color)# Draw the text on the image
+
+    image = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
+
+    return image
+
 def draw_bboxes(im, classified, det):
     image_h, image_w, _ = im.shape
+    named_tuple = time.localtime() # get struct_time
+    time_string = time.strftime("%d/%m/%Y %H:%M:%S", named_tuple)
     if len(det) == 0:
-        bbox_mess = 'Không phát hiện ra bệnh !!'
-        fontScale = 0.75
-        bbox_thick = int(0.6 * (image_h + image_w) / 350)
-        # Write text on input image
-        cv2.putText(im, bbox_mess, (5, 30), cv2.FONT_HERSHEY_SIMPLEX,
-                    fontScale, (0, 255, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
+        bbox_mess = 'Mô hình không chuẩn đoán được bệnh !!'
+        h = 10
+        w = 5
+        color = (0, 0, 0)
+        size = 20
+        im = write_date(im, bbox_mess, size, h, w, color, detect_none = True)
+
     else:
         fontScale = 0.5
         bbox_thick = int(0.6 * (image_h + image_w) / 600)
@@ -479,5 +497,12 @@ def draw_bboxes(im, classified, det):
                 cv2.putText(im, bbox_mess, (c1[0] + 1, c1[1] - 3), cv2.FONT_HERSHEY_SIMPLEX,
                         fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
             cv2.rectangle(im, c1, c2, bbox_color, thickness)
-    
+
+    # write date on image
+    h = image_h - 25
+    w = image_w - 145
+    color = (255, 255, 255)
+    size = 15
+    im = write_date(im, time_string, size, h, w, color, detect_none = False)
+
     return im
