@@ -61,7 +61,6 @@ def load_model(weights, device, data, source):
     bs = 1  # batch_size
     return model, pt, bs, imgsz, dataset, device, names
 
-
 def detect_object(weights, device, data, source):
     classified = [] 
     imgsz = (640, 640)  # inference size (height, width)

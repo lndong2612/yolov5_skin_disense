@@ -1,0 +1,29 @@
+{
+    "english_name": [
+        {"Chickenpox": [
+            {"ID": 0},
+            {"length_name": "Thuy_dau"},
+            {"vietnamese_name": "Thuỷ đậu"}
+        ]},
+        {"Lupus": [
+            {"ID": 1},
+            {"length_name": "Lupus_ban_do"},
+            {"vietnamese_name": "Lupus ban đỏ"}
+        ]},
+        {"Ringworm": [
+            {"ID": 2},
+            {"length_name": "Hac_lao"},
+            {"vietnamese_name": "Hắc lào"}
+        ]},
+        {"Tinea_Versicolor": [
+            {"ID": 3},
+            {"length_name": "Lang_ben"},
+            {"vietnamese_name": "Lang ben"}
+        ]},
+        {"Zona": [
+            {"ID": 4},
+            {"length_name": "Zona_than_kinh"},
+            {"vietnamese_name": "Zona thần kinh"}
+        ]}                                
+    ]
+  }

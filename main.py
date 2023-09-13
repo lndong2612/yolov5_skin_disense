@@ -55,14 +55,14 @@ def detect_method():
         }
 
         classified.append(image_url)
-
         with open(os.path.join(settings.IMAGE_FOLDER, 'image_url.json'), 'w') as outfile:
             json.dump(image_url, outfile)
 
         return jsonify(status_code = 200, content=classified)
 
-    except Exception as e:
-        return jsonify(status_code = 400, content={'success':"false",'error': str(e)})
+    except Exception as error:
+        print('Error: ',error)
+        return jsonify(status_code = 400, content={'success':"false",'error': str(error)})
 
 @app.route('/show_detected', methods=['GET', 'POST'])
 def show_detected():
