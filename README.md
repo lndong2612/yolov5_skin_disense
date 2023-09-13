@@ -84,11 +84,51 @@ Run in different console while running main.py
     (venv)$ python test/test_client.py
 ```
 
-{'content': [{'label': 'Tinea_Versicolor', 'score': '0.90', 'xmax': 289, 'xmin': 185, 'ymax': 132, 'ymin': 48}, {'label': 'Tinea_Versicolor', 'score': '0.93', 'xmax': 521, 'xmin': 175, 'ymax': 384, 'ymin': 171}, {'label': 'Tinea_Versicolor', 'score': '0.93', 'xmax': 640, 'xmin': 582, 'ymax': 384, 'ymin': 90}, {'label': 'Tinea_Versicolor', 'score': '0.94', 'xmax': 184, 'xmin': 33, 'ymax': 384, 'ymin': 142}, {'detect_image': 'resources/images/2023/09/07/detect/15324907092023_detect.jpg', 'original_image': 'resources/images/2023/09/07/original/15324907092023_original.jpg'}], 'status_code': 200}
+{
+    "content": [
+        {
+            "label": "Hắc lào",
+            "score": "0.90",
+            "xmax": 436,
+            "xmin": 339,
+            "ymax": 238,
+            "ymin": 136
+        },
+        {
+            "label": "Lang ben",
+            "score": "0.91",
+            "xmax": 306,
+            "xmin": 203,
+            "ymax": 169,
+            "ymin": 45
+        },
+        {
+            "label": "Hắc lào",
+            "score": "0.93",
+            "xmax": 537,
+            "xmin": 414,
+            "ymax": 213,
+            "ymin": 83
+        },
+        {
+            "label": "Lang ben",
+            "score": "0.93",
+            "xmax": 223,
+            "xmin": 0,
+            "ymax": 281,
+            "ymin": 101
+        },
+        {
+            "detected_image": "resources/images/2023/09/13/detect/17284113092023_detected.jpg",
+            "original_image": "resources/images/2023/09/13/original/17284113092023_original.jpg"
+        }
+    ],
+    "status_code": 200
+}
 
 <div align="center">
   <p>
-    <img width="80%" src="./background/zona.jpg"></a>
-    <img width="80%" src="./background/15324907092023_detect.jpg"></a>
+    <img width="80%" src="./background/17281613092023_detected.jpg"></a>
+    <img width="80%" src="./background/17491913092023_detected.jpg"></a>
   </p>
 
