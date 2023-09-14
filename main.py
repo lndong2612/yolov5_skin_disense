@@ -23,7 +23,7 @@ app = Flask(__name__)
 original = []
 detected = []
 
-@app.route("/detect_object", methods=['POST'])
+@app.route("/skin_disense", methods=['POST'])
 def detect_method():
     try:
         """Detect object on input image"""

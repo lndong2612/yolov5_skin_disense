@@ -483,6 +483,7 @@ def draw_bboxes(im, classified, det):
         shape = [(3, 8), (370, 35)]      
         draw.rectangle(shape, fill = (246, 2, 2))
         bbox_mess = 'Mô hình không chuẩn đoán được bệnh !!'
+        print(bbox_mess)
         font_noobject = ImageFont.truetype("arial.ttf", 20, encoding="unic")# Use a truetype font
         draw.text((5, 10), bbox_mess, font=font_noobject, fill=color)# Draw the text on the image  
 
