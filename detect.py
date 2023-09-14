@@ -4,10 +4,8 @@ import sys
 import numpy as np
 from pathlib import Path
 
-
 import torch
 import torch.backends.cudnn as cudnn
-
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -15,8 +13,6 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-
-from models.common import DetectMultiBackend
 from models.common import DetectMultiBackend
 from utils.dataloaders import LoadImages
 from utils.general import (LOGGER, Profile, check_img_size, non_max_suppression, scale_boxes, xyxy2xywh)
@@ -61,6 +57,7 @@ def load_model(weights, device, data, source):
     bs = 1  # batch_size
     return model, pt, bs, imgsz, dataset, device, names
 
+# Detect object
 def detect_object(weights, device, data, source):
     classified = [] 
     imgsz = (640, 640)  # inference size (height, width)

@@ -20,6 +20,8 @@ storage.googleapis.com
 runs/*
 data/*
 resources/*
+resources/images/*
+resources/weight_init/*
 test/*
 data/images/*
 !data/*.yaml
