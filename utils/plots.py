@@ -2,12 +2,13 @@
 """
 Plotting utils
 """
-
+import time
 import contextlib
 import math
 import os
 from copy import copy
 from pathlib import Path
+import json
 
 import cv2
 import matplotlib
@@ -19,16 +20,19 @@ import torch
 from PIL import Image, ImageDraw
 from scipy.ndimage.filters import gaussian_filter1d
 from ultralytics.utils.plotting import Annotator
+from PIL import ImageFont, ImageDraw, Image
+import random
+
 
 from utils import TryExcept, threaded
 from utils.general import LOGGER, clip_boxes, increment_path, xywh2xyxy, xyxy2xywh
 from utils.metrics import fitness
-
+# -*- coding: utf8 -*-
 # Settings
 RANK = int(os.getenv('RANK', -1))
 matplotlib.rc('font', **{'size': 11})
 matplotlib.use('Agg')  # for writing to files only
-
+number_of_colors = 5
 
 class Colors:
     # Ultralytics color palette https://ultralytics.com/
@@ -445,12 +449,42 @@ def save_one_box(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=False,
         Image.fromarray(crop[..., ::-1]).save(f, quality=95, subsampling=0)  # save RGB
     return crop
 
-def draw_bbox(im, classified):
-    fontScale = 0.5
+def convert_name_id(eng_name, option):
+    output = ''
+    with open('skin_disense.json', 'r',encoding='utf-8') as outfile:
+        json_object = json.load(outfile)
+        for info in json_object['english_name']:
+            try:
+                if option == 'length_name':
+                    output = info[eng_name][1]['length_name']
+                elif option == 'ID':
+                    output = info[eng_name][0]['ID']
+                elif option == 'vietnamese_name':
+                    output = info[eng_name][2]['vietnamese_name']                            
+            except Exception:
+                pass    
+    
+    return output
+
+def draw_bboxes(im, classified, det):
     image_h, image_w, _ = im.shape
+    named_tuple = time.localtime() # get struct_time
+    time_string = time.strftime("%d/%m/%Y %H:%M:%S", named_tuple)    
     bbox_thick = int(0.6 * (image_h + image_w) / 600)
-    bbox_color = (0, 255, 0)
-    thickness = 2
+    cv2_im_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
+    pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL    
+    font_object = ImageFont.truetype("arial.ttf", 18, encoding="unic")# Use a truetype font    
+    draw = ImageDraw.Draw(pil_im)
+    bbox_color = ['#008744', '#fbe300', '#9400d3', '#ffa700', '#7a0012', '#c5f536']# Colors of bounding box
+
+    # Check if no objects are detected
+    if len(det) == 0:
+        color = (255, 255, 255)
+        shape = [(3, 8), (370, 35)]      
+        draw.rectangle(shape, fill = (246, 2, 2))
+        bbox_mess = 'Mô hình không chuẩn đoán được bệnh !!'
+        font_noobject = ImageFont.truetype("arial.ttf", 20, encoding="unic")# Use a truetype font
+        draw.text((5, 10), bbox_mess, font=font_noobject, fill=color)# Draw the text on the image  
 
     # Draw bbox on input image
     for info in classified:
@@ -458,23 +492,27 @@ def draw_bbox(im, classified):
         ymin = info['ymin']
         xmax = info['xmax']
         ymax = info['ymax']
+        ID = convert_name_id(info['label'], 'ID')
         c1, c2 = (xmin, ymin), (xmax, ymax)
-        score = float(info['score'])
-        if score < 0.5:
-            pass
+        draw.rectangle([c1, c2], outline = bbox_color[ID], width = 2)# Draw bbox on image
+        bbox_mess = '%s - %s' % (convert_name_id(info['label'], 'length_name'), info['score'])
+        final_bbox_mess = '%s - %s' % (convert_name_id(info['label'], 'vietnamese_name'), info['score'])
+        t_size = cv2.getTextSize(bbox_mess, 0, 0.5, thickness=bbox_thick // 2)[0]
+        c3 = (c1[0] + t_size[0] + 10 , c1[1] - t_size[1] - 12)
+        c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 14)
+        if ymin <= 10:
+            draw.rectangle([c2, c4], fill = bbox_color[ID])# fill
+            draw.text((c2[0] - t_size[0] + 3, c2[1] + t_size[1] - 10), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image       
         else:
-            bbox_mess = '%s - %s' % (info['label'], info['score'])
-            t_size = cv2.getTextSize(bbox_mess, 0, fontScale, thickness=bbox_thick // 2)[0]
-            c3 = (c1[0] + t_size[0], c1[1] - t_size[1] - 7)
-            c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 7)
-            if ymin <= 10:
-                cv2.rectangle(im, c2, c4, bbox_color, -1) #filled
-                cv2.putText(im, bbox_mess, (c2[0] - t_size[0], c2[1] + t_size[1] + 5), cv2.FONT_HERSHEY_SIMPLEX,
-                    fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)                
-            else:
-                cv2.rectangle(im, c1, c3, bbox_color, -1) #filled
-                cv2.putText(im, bbox_mess, (c1[0] + 1, c1[1] - 3), cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale, (0, 0, 0), bbox_thick // 2, lineType=cv2.LINE_AA)               
-                cv2.rectangle(im, c1, c2, bbox_color, thickness)
-    
-    return im
+            draw.rectangle([c1, c3], fill = bbox_color[ID])# fill
+            draw.text((c1[0] + 3, c1[1] - 20), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image
+        
+    # Write date on image
+    font_date = ImageFont.truetype("arial.ttf", 15, encoding="unic")# Use a truetype font
+    draw.text((image_w - 145, image_h - 25), time_string, font = font_date, fill = (255, 255, 255))# Draw the text on the image   
+    img = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
+    for i in range(len(classified)):
+        info = classified[i]
+        info2 = info.copy()
+        info['label'] = convert_name_id(info2['label'], 'vietnamese_name')
+    return img

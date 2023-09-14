@@ -4,10 +4,8 @@ import sys
 import numpy as np
 from pathlib import Path
 
-
 import torch
 import torch.backends.cudnn as cudnn
-
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -15,8 +13,6 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-
-from models.common import DetectMultiBackend
 from models.common import DetectMultiBackend
 from utils.dataloaders import LoadImages
 from utils.general import (LOGGER, Profile, check_img_size, non_max_suppression, scale_boxes, xyxy2xywh)
@@ -61,7 +57,7 @@ def load_model(weights, device, data, source):
     bs = 1  # batch_size
     return model, pt, bs, imgsz, dataset, device, names
 
-
+# Detect object
 def detect_object(weights, device, data, source):
     classified = [] 
     imgsz = (640, 640)  # inference size (height, width)
@@ -110,7 +106,7 @@ def detect_object(weights, device, data, source):
                     n = (det[:, 5] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
-                # Write results
+                # Get results
                 for *xyxy, conf, cls in reversed(det):
                     c = int(cls)  # integer class
                     label = f'{names[c]} {conf:.2f}'
@@ -131,7 +127,7 @@ def detect_object(weights, device, data, source):
                         'score': f'{conf:.2f}',
                         'label': names[c]
                    }                    
-                    classified.append(doc)
+                    classified.append(doc)             
 
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
@@ -140,4 +136,4 @@ def detect_object(weights, device, data, source):
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
 
-    return classified
+    return classified, det

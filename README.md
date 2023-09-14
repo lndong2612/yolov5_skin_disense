@@ -84,10 +84,51 @@ Run in different console while running main.py
     (venv)$ python test/test_client.py
 ```
 
-{'content': [{'label': 'Zona', 'score': '0.92', 'xmax': 478, 'xmin': 192, 'ymax': 218, 'ymin': 97}, {'label': 'Zona', 'score': '0.92', 'xmax': 258, 'xmin': 72, 'ymax': 120, 'ymin': 0}, {'label': 'Zona', 'score': '0.93', 'xmax': 289, 'xmin': 0, 'ymax': 416, 'ymin': 195}, {'label': 'Zona', 'score': '0.95', 'xmax': 640, 'xmin': 327, 'ymax': 416, 'ymin': 168}], 'status_code': 200}
+{
+    "content": [
+        {
+            "label": "Hắc lào",
+            "score": "0.90",
+            "xmax": 436,
+            "xmin": 339,
+            "ymax": 238,
+            "ymin": 136
+        },
+        {
+            "label": "Lang ben",
+            "score": "0.91",
+            "xmax": 306,
+            "xmin": 203,
+            "ymax": 169,
+            "ymin": 45
+        },
+        {
+            "label": "Hắc lào",
+            "score": "0.93",
+            "xmax": 537,
+            "xmin": 414,
+            "ymax": 213,
+            "ymin": 83
+        },
+        {
+            "label": "Lang ben",
+            "score": "0.93",
+            "xmax": 223,
+            "xmin": 0,
+            "ymax": 281,
+            "ymin": 101
+        },
+        {
+            "detected_image": "resources/images/2023/09/13/detect/17284113092023_detected.jpg",
+            "original_image": "resources/images/2023/09/13/original/17284113092023_original.jpg"
+        }
+    ],
+    "status_code": 200
+}
 
 <div align="center">
   <p>
-    <img width="80%" src="./background/zona.jpg"></a>
+    <img width="80%" src="./background/17281613092023_detected.jpg"></a>
+    <img width="80%" src="./background/17491913092023_detected.jpg"></a>
   </p>
 
