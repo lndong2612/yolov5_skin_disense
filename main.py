@@ -23,7 +23,7 @@ app = Flask(__name__)
 original = []
 detected = []
 
-@app.route("/skin_disense", methods=['POST'])
+@app.route("/detect_object/skin_disense", methods=['POST'])
 def detect_method():
     try:
         """Detect object on input image"""
@@ -64,7 +64,7 @@ def detect_method():
         print('Error: ',error)
         return jsonify(status_code = 400, content={'success':"false",'error': str(error)})
 
-@app.route('/show_detected', methods=['GET', 'POST'])
+@app.route('/detect_object/show_detected', methods=['GET', 'POST'])
 def show_detected():
     try:
         """Show detected image file."""
@@ -76,7 +76,7 @@ def show_detected():
     except Exception as e:
         return jsonify(status_code = 400, content={'success':"false",'error': str(e)})
 
-@app.route('/get_image/<path:path>', methods=['GET'])
+@app.route('/detect_object/get_image/<path:path>', methods=['GET'])
 def get_image(path):
     try:
         """Get image file from path."""
