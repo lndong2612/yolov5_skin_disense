@@ -17,11 +17,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sn
 import torch
-from PIL import Image, ImageDraw
 from scipy.ndimage.filters import gaussian_filter1d
 from ultralytics.utils.plotting import Annotator
 from PIL import ImageFont, ImageDraw, Image
-import random
 
 
 from utils import TryExcept, threaded
@@ -483,7 +481,6 @@ def draw_bboxes(im, classified, det):
         shape = [(3, 8), (370, 35)]      
         draw.rectangle(shape, fill = (246, 2, 2))
         bbox_mess = 'Mô hình không chuẩn đoán được bệnh !!'
-        print(bbox_mess)
         font_noobject = ImageFont.truetype("arial.ttf", 20, encoding="unic")# Use a truetype font
         draw.text((5, 10), bbox_mess, font=font_noobject, fill=color)# Draw the text on the image  
 
@@ -496,16 +493,23 @@ def draw_bboxes(im, classified, det):
         ID = convert_name_id(info['label'], 'ID')
         c1, c2 = (xmin, ymin), (xmax, ymax)
         draw.rectangle([c1, c2], outline = bbox_color[ID], width = 2)# Draw bbox on image
+
+    # Draw bbox on input image
+    for info in classified:
+        xmin = info['xmin']
+        ymin = info['ymin']
+        xmax = info['xmax']
+        ymax = info['ymax']
+        ID = convert_name_id(info['label'], 'ID')
+        c1, c2 = (xmin, ymin), (xmax, ymax)
         bbox_mess = '%s - %s' % (convert_name_id(info['label'], 'length_name'), info['score'])
         final_bbox_mess = '%s - %s' % (convert_name_id(info['label'], 'vietnamese_name'), info['score'])
         t_size = cv2.getTextSize(bbox_mess, 0, 0.5, thickness=bbox_thick // 2)[0]
-        c3 = (c1[0] + t_size[0] + 10 , c1[1] - t_size[1] - 12)
-        c4 = (c2[0] - t_size[0], c2[1] + t_size[1] + 14)
         if ymin <= 10:
-            draw.rectangle([c2, c4], fill = bbox_color[ID])# fill
+            draw.rectangle([(xmin, ymax), (xmin + t_size[0], ymax + 2*t_size[1])], fill = bbox_color[ID])# fill
             draw.text((c2[0] - t_size[0] + 3, c2[1] + t_size[1] - 10), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image       
         else:
-            draw.rectangle([c1, c3], fill = bbox_color[ID])# fill
+            draw.rectangle([(xmin, ymin - 2*t_size[1]), (xmin + t_size[0],ymin)], fill = bbox_color[ID])# fill
             draw.text((c1[0] + 3, c1[1] - 20), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image
         
     # Write date on image
