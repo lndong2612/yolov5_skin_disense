@@ -512,9 +512,6 @@ def draw_bboxes(im, classified, det):
             draw.rectangle([(xmin, ymin - 2*t_size[1]), (xmin + t_size[0],ymin)], fill = bbox_color[ID])# fill
             draw.text((c1[0] + 3, c1[1] - 20), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image
         
-    # Write date on image
-    font_date = ImageFont.truetype("arial.ttf", 15, encoding="unic")# Use a truetype font
-    draw.text((image_w - 145, image_h - 25), time_string, font = font_date, fill = (255, 255, 255))# Draw the text on the image   
     img = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
     for i in range(len(classified)):
         info = classified[i]
