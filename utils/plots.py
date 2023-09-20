@@ -473,7 +473,7 @@ def draw_bboxes(im, classified, det):
     pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL    
     font_object = ImageFont.truetype("arial.ttf", 18, encoding="unic")# Use a truetype font    
     draw = ImageDraw.Draw(pil_im)
-    bbox_color = ['#008744', '#fbe300', '#9400d3', '#ffa700', '#7a0012', '#c5f536']# Colors of bounding box
+    bbox_color = ['#008744', '#855e05', '#9400d3', '#ffa700', '#7a0012', '#c5f536']# Colors of bounding box
 
     # Check if no objects are detected
     if len(det) == 0:
@@ -507,7 +507,7 @@ def draw_bboxes(im, classified, det):
         t_size = cv2.getTextSize(bbox_mess, 0, 0.5, thickness=bbox_thick // 2)[0]
         if ymin <= 10:
             draw.rectangle([(xmin, ymax), (xmin + t_size[0], ymax + 2*t_size[1])], fill = bbox_color[ID])# fill
-            draw.text((c2[0] - t_size[0] + 3, c2[1] + t_size[1] - 10), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image       
+            draw.text((c1[0] + 3, c2[1]), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image       
         else:
             draw.rectangle([(xmin, ymin - 2*t_size[1]), (xmin + t_size[0],ymin)], fill = bbox_color[ID])# fill
             draw.text((c1[0] + 3, c1[1] - 20), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image
