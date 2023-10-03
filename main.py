@@ -9,7 +9,7 @@ import logging
 import numpy as np
 from config import settings
 from detect import detect_object
-from utils.plots import draw_bboxes
+from utils.plots import draw_bboxes, information
 from flask import Flask, request, jsonify, send_file, send_from_directory
 
 # [logging config
@@ -53,12 +53,13 @@ def detect_method():
             'original_image': original[-1].replace('\\','/').split('./')[-1],
             'detected_image': detected[-1].replace('\\','/').split('./')[-1]
         }
-
-        classified.append(image_url)
+        image_url_arr = []
+        image_url_arr.append(image_url)
         with open(os.path.join(settings.IMAGE_FOLDER, 'image_url.json'), 'w') as outfile:
             json.dump(image_url, outfile)
+        classified = information(classified)
 
-        return jsonify(status_code = 200, content=classified)
+        return jsonify(status_code = 200, content={'classified':classified, 'image_url': image_url_arr})
 
     except Exception as error:
         print('Error: ',error)

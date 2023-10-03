@@ -465,9 +465,7 @@ def convert_name_id(eng_name, option):
     return output
 
 def draw_bboxes(im, classified, det):
-    image_h, image_w, _ = im.shape
-    named_tuple = time.localtime() # get struct_time
-    time_string = time.strftime("%d/%m/%Y %H:%M:%S", named_tuple)    
+    image_h, image_w, _ = im.shape 
     bbox_thick = int(0.6 * (image_h + image_w) / 600)
     cv2_im_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)# Convert the image to RGB (OpenCV uses BGR)
     pil_im = Image.fromarray(cv2_im_rgb)# Transform the cv2 image to PIL    
@@ -513,8 +511,14 @@ def draw_bboxes(im, classified, det):
             draw.text((c1[0] + 3, c1[1] - 20), final_bbox_mess, font=font_object, fill=(255, 255, 255))# Draw the text on the image
         
     img = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)# Get back the image to OpenCV
+
+    return img
+
+def information(classified):
     for i in range(len(classified)):
         info = classified[i]
         info2 = info.copy()
+        info['label_EN'] = info2['label']
         info['label'] = convert_name_id(info2['label'], 'vietnamese_name')
-    return img
+
+    return classified
