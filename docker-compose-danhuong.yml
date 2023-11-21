@@ -1,0 +1,27 @@
+version: "3.2"
+
+services:
+  api:
+    image: "tclinic-ai-api:latest"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      PORT: 8080
+      NODE_ENV: "production"
+    networks:
+      - host
+    ports:
+      - target: 8080
+        published: 8080
+        mode: host
+    volumes:
+      - "resources:/usr/src/app/resources"
+
+volumes:
+  resources:
+    driver: local
+
+networks:
+  host:
