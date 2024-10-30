@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    stages {
+        stage('Init') {
+            steps {
+                echo 'Testing..'
+                telegramSend(message: 'Building job: $PROJECT_NAME ... - Link: $BUILD_URL', chatId: -4013555823)
+            }
+        }
+        stage ('Deployments') {
+            steps {
+                echo 'Deploying to Production environment...'
+                echo 'Copy project over SSH...'
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'nhanhoa232',
+                        transfers:
+                            [sshTransfer(
+                                cleanRemote: false,
+                                excludes: '',
+                                execCommand: "docker build -t tclinic-ai-api ./thinklabsdev/tclinic-ai-apiCI/ \
+                                    && docker service rm tclinic-ai_api || true \
+                                    && docker stack deploy -c ./thinklabsdev/tclinic-ai-apiCI/docker-compose-danhuong.yml tclinic-ai \
+                                    && rm -rf ./thinklabsdev/tclinic-ai-apiCIB \
+                                    && mv ./thinklabsdev/tclinic-ai-apiCI/ ./thinklabsdev/tclinic-ai-apiCIB",
+                                execTimeout: 1800000,
+                                flatten: false,
+                                makeEmptyDirs: false,
+                                noDefaultExcludes: false,
+                                patternSeparator: '[, ]+',
+                                remoteDirectory: './thinklabsdev/tclinic-ai-apiCI',
+                                remoteDirectorySDF: false,
+                                removePrefix: '',
+                                sourceFiles: '*, classify/, data/, models/, segment/, utils/'
+                            )],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: false
+                    )
+                ])
+                telegramSend(message: 'Building job: $PROJECT_NAME ... - Link: $BUILD_URL', chatId: -4013555823)
+            }
+        }
+    }
+}

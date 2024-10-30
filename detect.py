@@ -108,6 +108,7 @@ def detect_object(weights, device, data, source):
 
                 # Get results
                 for *xyxy, conf, cls in reversed(det):
+                    print(f'{conf:.2f}')
                     c = int(cls)  # integer class
                     label = f'{names[c]} {conf:.2f}'
                     annotator.box_label(xyxy, label, color=colors(c, True))
@@ -126,8 +127,8 @@ def detect_object(weights, device, data, source):
                         'ymax': int(xyxy[0, 3]), 
                         'score': f'{conf:.2f}',
                         'label': names[c]
-                   }                    
-                    classified.append(doc)             
+                   }
+                    classified.append(doc)           
 
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")

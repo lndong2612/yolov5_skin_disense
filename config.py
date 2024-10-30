@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     PORT: int = 8080
     DEBUG = True
     API = 'https://tclinic-ai.thinklabs.com.vn'
+    API_V1_STR: str = "/detect_object"
     RESOURCES: str = './resources'
     IMAGE_FOLDER: str = os.path.join(RESOURCES, 'images')
     MODEL: str = os.path.join(RESOURCES, 'weight_init')
